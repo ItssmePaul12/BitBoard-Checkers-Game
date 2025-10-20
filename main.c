@@ -10,9 +10,9 @@ int main(){
     unsigned long long test = 0;
     printf("=== Bit Manipulation Test ===\n");
     SetBit(&test, 3);
-    printf("After setting bit 3: %llu\n", test);
+    printf("After setting bit 3: %I64u\n", test);
     ToggleBit(&test, 3);
-    printf("After toggling bit 3: %llu\n", test);
+    printf("After toggling bit 3: %I64u\n", test);
     printf("Count of the bits set: %d\n", CountBits(test));
 
 

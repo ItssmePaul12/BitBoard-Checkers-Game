@@ -120,8 +120,8 @@ printf("Improper move: The destination is not empty or not playable.\n");
 void save_game(GameState *g, const char *filename){
     FILE *file = fopen(filename, "w");
     if (!file){ printf("Save error.\n"); return; }
-    fprintf(file, "red_pieces=0x%016llX\nblack_pieces=0x%016llX\n", g->red_pieces, g->black_pieces);
-    fprintf(file, "red_kings=0x%016llX\nblack_kings=0x%016llX\ncurrent_turn=%d\n", g->red_kings, g->black_kings, g->current_turn);
+    fprintf(file, "red_pieces=0x%016I64X\nblack_pieces=0x%016I64X\n", g->red_pieces, g->black_pieces);
+    fprintf(file, "red_kings=0x%016I64X\nblack_kings=0x%016I64X\ncurrent_turn=%d\n", g->red_kings, g->black_kings, g->current_turn);
     fclose(file);
     printf("Game is saved successfully.\n");
     }
@@ -129,10 +129,10 @@ void save_game(GameState *g, const char *filename){
 void load_game(GameState *g, const char *filename){
         FILE *fp = fopen(filename, "r");
         if (!fp){ printf("Loading error.\n"); return; }
-        fscanf(fp, "red_pieces=%llx\n", &g->red_pieces);
-        fscanf(fp, "black_pieces=%llx\n", &g->black_pieces);
-        fscanf(fp, "red_kings=%llx\n", &g->red_kings);
-        fscanf(fp, "black_kings=%llx\n", &g->black_kings);
+        fscanf(fp, "red_pieces=%I64x\n", &g->red_pieces);
+        fscanf(fp, "black_pieces=%I64x\n", &g->black_pieces);
+        fscanf(fp, "red_kings=%I64x\n", &g->red_kings);
+        fscanf(fp, "black_kings=%I64x\n", &g->black_kings);
         fscanf(fp, "current_turn=%d\n", &g->current_turn);
         fclose(fp);
         printf("Game is loaded from %s\n", filename);
