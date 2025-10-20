@@ -1,6 +1,8 @@
+//Used AI tool to help me with the understanding of the code.
 #include "game.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 const unsigned long long RED_START =  0x00000000000FFF00ULL;
 const unsigned long long RED_PROMOTION_MASK =  0xFF00000000000000ULL;
@@ -17,7 +19,7 @@ void PrintBoard(const GameState *g){
     printf("Current turn: %s\n", g->current_turn == 0 ? "Red" : "Black");
     printf("  0 1 2 3 4 5 6 7\n");
     for (int row = 0; row < 8; row++){
-        printf("%d", row);
+        printf("%d ", row); //Added some spacing for better visuals of the board.
         for (int column = 0; column < 8; column++){
             int bit = rc_to_index(row, column);
             unsigned long long mask = 1ULL << bit;
@@ -56,7 +58,7 @@ int MovePiece(GameState *g, int r1, int c1, int r2, int c2){
     unsigned long long mask_from = 1ULL << from, mask_to = 1ULL << to;
 
     if (!(VALID_SQUARES & mask_to) || (mask_to & (g->red_pieces | g->black_pieces | g->red_kings | g->black_kings))){
-printf("Improper move: The destination is not empty or not interactive.\n");
+printf("Improper move: The destination is not empty or not playable.\n");
         return 0;
     }
 
@@ -79,7 +81,7 @@ printf("Improper move: The destination is not empty or not interactive.\n");
 
     if (abs(dr) == 2){
         int mr = (r1 + r2) / 2, mc = (c1 + c2) / 2;
-        int mid = rc_to_bit(mr, mc);
+        int mid = rc_to_index(mr, mc);
         unsigned long long mask_mid = 1ULL << mid;
         unsigned long long opponent_pieces = isRedTurn ? (g->black_pieces | g->black_kings) : (g->red_pieces | g->red_kings);
         if (!(opponent_pieces & mask_mid)){
@@ -121,26 +123,53 @@ void save_game(GameState *g, const char *filename){
     fprintf(file, "red_pieces=0x%016llX\nblack_pieces=0x%016llX\n", g->red_pieces, g->black_pieces);
     fprintf(file, "red_kings=0x%016llX\nblack_kings=0x%016llX\ncurrent_turn=%d\n", g->red_kings, g->black_kings, g->current_turn);
     fclose(file);
-    printf("Game is scaved successfully.\n", filename);
+    printf("Game is saved successfully.\n");
     }
     
 void load_game(GameState *g, const char *filename){
-        FILE *file = fopen(filename, "r");
-        if (!filename){ printf("Loading error.\n"); return; }
-        fscanf(filename, "red_pieces=%llx\n", &g->red_pieces);
-        fscanf(filename, "black_pieces=%llx\n", &g->black_pieces);
-        fscanf(filename, "red_kings=%llx\n", &g->red_kings);
-        fscanf(filename, "black_kings=%llx\n", &g->black_kings);
-        fscanf(filename, "current_turn=%d\n", &g->current_turn);
-        fclose(file);
+        FILE *fp = fopen(filename, "r");
+        if (!fp){ printf("Loading error.\n"); return; }
+        fscanf(fp, "red_pieces=%llx\n", &g->red_pieces);
+        fscanf(fp, "black_pieces=%llx\n", &g->black_pieces);
+        fscanf(fp, "red_kings=%llx\n", &g->red_kings);
+        fscanf(fp, "black_kings=%llx\n", &g->black_kings);
+        fscanf(fp, "current_turn=%d\n", &g->current_turn);
+        fclose(fp);
         printf("Game is loaded from %s\n", filename);
         }
 
 
 void PlayGame(){
-    GameState g; InitGame(&g);
+    GameState g; 
+    InitGame(&g);
     char command[32], filename[64];
     int r1, c1, r2, c2;
+
+    printf("Welcome to the game of checkers! The commands are: move r1 c1 r2 c2 | save file | load file | exit\n");
     
     while (1){
+        PrintBoard(&g);
+        int winner = CheckWin(&g);
+        if (winner == 0) { printf("Red wins!\n"); break;  }
+        if (winner == 1) { printf("Black wins!\n"); break;  }
+
+        printf("> ");
+        if (scanf("%s", command) != 1) break;
+
+        if (strcmp(command, "move") == 0){
+            scanf("%d %d %d %d", &r1, &c1, &r2, &c2);
+            MovePiece(&g, r1, c1, r2, c2);
+        } else if (strcmp(command, "save") == 0){
+            scanf("%s", filename);
+            save_game(&g, filename);
+        } else if (strcmp(command, "load") == 0){
+            scanf("%s", filename);
+            load_game(&g, filename);
+        } else if(strcmp(command, "exit") == 0){
+            printf("Thanks for playing!\n");
+            break;
+        } else {
+            printf("Invalid command.\n");
+        }
+    }
 }
