@@ -1,3 +1,4 @@
+//Used AI tool to help me with the understanding of the code.
 #ifndef GAME_H
 #define GAME_H
 
