@@ -8,11 +8,11 @@ const unsigned long long RED_START =  0x00000000000FFF00ULL;
 const unsigned long long RED_PROMOTION_MASK =  0xFF00000000000000ULL;
 const unsigned long long BLACK_START = 0x00000FFF00000000ULL;
 const unsigned long long BLACK_PROMOTION_MASK = 0x00000000000000FFULL;
-const unsigned long long VALID_SQUARES = 0x55AA55AA55AA55AAULL;
+const unsigned long long VALID_SQUARES = 0xAA55AA55AA55AA55ULL;
 
 
 int rc_to_index(int row, int column) {
-    return row * 8 + column;
+    return (7 - row) * 8 + column;
 }
 
 void PrintBoard(const GameState *g){
