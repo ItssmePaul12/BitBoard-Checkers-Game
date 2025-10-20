@@ -12,7 +12,7 @@ const unsigned long long VALID_SQUARES = 0x55AA55AA55AA55AAULL;
 
 
 int rc_to_index(int row, int column) {
-    return (7 - row) * 8 + (7 - column);
+    return row * 8 + column;
 }
 
 void PrintBoard(const GameState *g){
