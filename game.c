@@ -63,9 +63,9 @@ void CheckKingPromotion(GameState *g){
 }
 
 int CheckWin(const GameState *g){
-    if ((g->black_pieces | g->black_kings) == 0) return 0; // Red wins
-    if ((g->red_pieces | g->red_kings) == 0) return 1; // Black wins
-    return -1; // No winner yet
+    if ((g->black_pieces | g->black_kings) == 0) return 0; // This means that Red will win.
+    if ((g->red_pieces | g->red_kings) == 0) return 1; // This means that Black will win.
+    return -1; // This will signals that there is No winner yet.
 }
 
 int MovePiece(GameState *g, int r1, int c1, int r2, int c2){
@@ -83,12 +83,32 @@ printf("Improper move: The destination is not empty or not playable.\n");
     int isBlackPiece = (g->black_pieces | g->black_kings) & mask_from;
     int isRedPiece = (g->red_pieces | g->red_kings) & mask_from;
     
-
-    if ((isRedTurn && !isRedPiece) || (!isRedTurn && !isBlackPiece)){
-        printf("Improper move: There is not piece placed at the location.\n");
+//These set of lines are checking for validation of the square.
+    if (!(VALID_SQUARES & mask_from)) {
+        printf("Improper move: The source of the square isn't playable (light square).\n");
         return 0;
     }
 
+    if ((isRedPiece && !isRedPiece)) {
+        printf("Improper move: At the source square, there is no red piece to be found.\n");
+        return 0;
+    }
+
+    if ((!isRedTurn && !isBlackPiece)) {
+        printf("Improper move: At the source square, there is no black piece to be found.\n");
+        return 0;
+    }
+
+    //These set of lines are checking for the destination.
+    if (!(VALID_SQUARES & mask_to)) {
+        printf("Improper move: It is not playable at the destination square (light square).\n");
+        return 0;
+    }
+
+    if ((mask_to & (g->red_pieces | g->black_pieces | g->red_kings | g->black_kings))) {
+        printf("Improper move: It is already occupied at the destination square.\n");
+        return 0;
+    }
     int dr = r2 - r1, dc = abs(c2 - c1);
     if (dc != abs(dr) || (abs(dr) != 1 && abs(dr) != 2)){
         printf("Improper move: The move shape is invalid.\n");
