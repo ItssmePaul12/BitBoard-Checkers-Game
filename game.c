@@ -89,7 +89,7 @@ printf("Improper move: The destination is not empty or not playable.\n");
         return 0;
     }
 
-    if ((isRedPiece && !isRedPiece)) {
+    if (isRedPiece && !isRedPiece) {
         printf("Improper move: At the source square, there is no red piece to be found.\n");
         return 0;
     }
