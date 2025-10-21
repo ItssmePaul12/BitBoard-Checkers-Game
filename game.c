@@ -4,10 +4,10 @@
 #include <string.h>
 #include <stdio.h>
 
-const unsigned long long RED_START =  0x00000000000FFF00ULL;
-const unsigned long long RED_PROMOTION_MASK =  0xFF00000000000000ULL;
-const unsigned long long BLACK_START = 0x00000FFF00000000ULL;
-const unsigned long long BLACK_PROMOTION_MASK = 0x00000000000000FFULL;
+const unsigned long long RED_START =  0x000000000055AA55ULL;
+const unsigned long long RED_PROMOTION_MASK =   0xAA00000000000000ULL;
+const unsigned long long BLACK_START = 0xAA55AA0000000000ULL;
+const unsigned long long BLACK_PROMOTION_MASK = 0x0000000000000055ULL;
 const unsigned long long VALID_SQUARES = 0xAA55AA55AA55AA55ULL;
 
 
