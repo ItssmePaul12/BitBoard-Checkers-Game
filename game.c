@@ -11,13 +11,15 @@ const unsigned long long BLACK_PROMOTION_MASK = 0x00000000000000FFULL;
 const unsigned long long VALID_SQUARES = 0xAA55AA55AA55AA55ULL;
 
 
+int rc_to_index(int row, int column);
+
 void DebugPlayableSquares(void){ //This function is used as a helper.
     printf("\nPlayable (1) / Unplayable (0) squares:\n");
     for (int r = 0; r < 8; r++){
         printf("%d ", r);
         for (int c = 0; c < 8; c++) {
-            int biting = rc_to_index(r, c);
-            unsigned long long mask = 1ULL << biting;
+            int bit = rc_to_index(r, c);
+            unsigned long long mask = 1ULL << bit;
             printf("%d ", (VALID_SQUARES & mask ) ? 1 : 0);
         }
         printf("\n");
@@ -158,7 +160,7 @@ void PlayGame(){
     InitGame(&g);
 
     DebugPlayableSquares();
-    
+
     char command[32], filename[64];
     int r1, c1, r2, c2;
 
