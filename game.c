@@ -4,11 +4,12 @@
 #include <string.h>
 #include <stdio.h>
 
+//These set of lines are meant for the board visualization.
 const unsigned long long RED_START =  0x000000000055AA55ULL;
 const unsigned long long RED_PROMOTION_MASK =   0xAA00000000000000ULL;
 const unsigned long long BLACK_START = 0xAA55AA0000000000ULL;
 const unsigned long long BLACK_PROMOTION_MASK = 0x0000000000000055ULL;
-const unsigned long long VALID_SQUARES = 0xAA55AA55AA55AA55ULL;
+const unsigned long long VALID_SQUARES = 0x55AA55AA55AA55AAULL;
 
 
 int rc_to_index(int row, int column);
@@ -28,7 +29,7 @@ void DebugPlayableSquares(void){ //This function is used as a helper.
 }
 
 int rc_to_index(int row, int column) {
-    return (7 - row) * 8 + column;
+    return row * 8 + column;
 }
 
 void PrintBoard(const GameState *g){
@@ -54,7 +55,7 @@ void InitGame(GameState *g){
     g->red_pieces = RED_START;
     g->red_kings = g->black_kings = 0ULL;
     g->black_pieces = BLACK_START;
-    g->current_turn = 0; // Red starts
+    g->current_turn = 0; // This will means that Red starts the game.
 }
 
 void CheckKingPromotion(GameState *g){
@@ -149,13 +150,13 @@ printf("Improper move: The destination is not empty or not playable.\n");
     }
     
     CheckKingPromotion(g);
-    g->current_turn = 1 - g->current_turn; // Switch turns
+    g->current_turn = 1 - g->current_turn; // This line is meant for switching the turns.
     return 1;
 }
 
 void save_game(GameState *g, const char *filename){
-    FILE *file = fopen(filename, "w");
-    if (!file){ printf("Save error.\n"); return; }
+    FILE *file = fopen(filename, "w"); //Meant for saving the game as a txt file.
+    if (!file){ printf("Save error.\n"); return; } //If any saving errors occurs, it will print out this message.
     fprintf(file, "red_pieces=0x%016I64X\nblack_pieces=0x%016I64X\n", g->red_pieces, g->black_pieces);
     fprintf(file, "red_kings=0x%016I64X\nblack_kings=0x%016I64X\ncurrent_turn=%d\n", g->red_kings, g->black_kings, g->current_turn);
     fclose(file);
@@ -163,8 +164,8 @@ void save_game(GameState *g, const char *filename){
     }
     
 void load_game(GameState *g, const char *filename){
-        FILE *fp = fopen(filename, "r");
-        if (!fp){ printf("Loading error.\n"); return; }
+        FILE *fp = fopen(filename, "r"); //This is meant for reading/loading the save game for playing the board game.
+        if (!fp){ printf("Loading error.\n"); return; } //This is meant for if it detects a loading error while trying to read a txt file.
         fscanf(fp, "red_pieces=%I64x\n", &g->red_pieces);
         fscanf(fp, "black_pieces=%I64x\n", &g->black_pieces);
         fscanf(fp, "red_kings=%I64x\n", &g->red_kings);
@@ -179,7 +180,7 @@ void PlayGame(){
     GameState g; 
     InitGame(&g);
 
-    DebugPlayableSquares();
+    DebugPlayableSquares(); //Calling the helper method as a visual to see if the board is properly formatted well.
 
     char command[32], filename[64];
     int r1, c1, r2, c2;
@@ -195,16 +196,16 @@ void PlayGame(){
         printf("> ");
         if (scanf("%s", command) != 1) break;
 
-        if (strcmp(command, "move") == 0){
+        if (strcmp(command, "move") == 0){ //Meant for moving the within the board.
             scanf("%d %d %d %d", &r1, &c1, &r2, &c2);
             MovePiece(&g, r1, c1, r2, c2);
-        } else if (strcmp(command, "save") == 0){
+        } else if (strcmp(command, "save") == 0){ //Meant for saving the game while playing the board game.
             scanf("%s", filename);
             save_game(&g, filename);
-        } else if (strcmp(command, "load") == 0){
+        } else if (strcmp(command, "load") == 0){ //Meant for loading the game from a txt file while playing the game.
             scanf("%s", filename);
             load_game(&g, filename);
-        } else if(strcmp(command, "exit") == 0){
+        } else if(strcmp(command, "exit") == 0){ //Meant for exiting out the game.
             printf("Thanks for playing!\n");
             break;
         } else {
