@@ -23,5 +23,5 @@ gcc -Wall -Wextra -std=c11 -g main.c game.c bitops.c -o checkers
 ```
 
 ## Notes
-I did run into some issues with the board-masking logic. I am tried to do a lot of things to fix it, but was unable to fix it. But, everything else should be working well such as the loading, saving, etc. 
+I did run into some issues with the board-masking logic. I am tried to do a lot of things to fix it, but was unable to fix it (Something with the VALID_SQUARES in the game.c file). But, everything else should be working well such as the loading, saving, etc. 
 
